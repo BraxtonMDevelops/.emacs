@@ -1,6 +1,7 @@
 ;;Allows me to write this config literatlly
 ;;(org-babel-load-file (expand-file-name "config.org"  user-emacs-directory))
 
+
 ;;Quality of Life Changes
 
 (menu-bar-mode -1)
@@ -12,13 +13,15 @@
 
 
 ;;Enable visual bell
+
 (setq visible-bell t)
 
 ;;Set font
-(set-face-attribute 'default nil :font "Monofur Nerd Font Mono" :height 240)
-
-(load-theme 'tango-dark)
-
+(set-face-attribute 'default nil :font "VictorMono Nerd Font Mono" :height 240 :weight 'medium)
+;;(set-face-attribute 'default nil :font "Monofur Nerd Font Mono" :height 240)
+;; FantasqueSans Mono Nerd Font
+(set-face-attribute 'fixed-pitch nil :font "VictorMono Nerd Font Mono" :height 240 :weight 'medium)
+(set-face-attribute 'variable-pitch nil :font "IBM Plex Sans" :height 250)
 
 ;;Setting up package archives and stuff
 (require 'package)
@@ -61,12 +64,15 @@
   :config
   (ivy-mode 1))
 
-
+;;set up smartparens
+(use-package smartparens)
+(smartparens-global-mode t)
+(show-paren-mode 1)
 ;; Sets up Doom Modeline & Doom Theme
 (use-package doom-modeline
   :ensure t
-  :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height 15)))
+  :init (doom-modeline-mode 1))
+  
 (use-package doom-themes)
 (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
       doom-themes-enable-italic t) ; if nil, italics is universally disabled
@@ -162,6 +168,40 @@
 
 (use-package hydra)
 
+;; More Basic Configurations for Org
+
+(defun mj/org-mode-setup ()
+  (variable-pitch-mode 1)
+  (auto-fill-mode 0)
+  (visual-line-mode 1)
+  (setq evil-auto-indent nil)
+  (org-indednt-mode))
+  
+(use-package org
+  :hook (org-mode . mj/org-mode-setup)
+  :config
+  (setq org-ellipsis " ▾"))
+
+ 
+  (use-package org-superstar  
+  :after org
+  :hook (org-mode . org-superstar-mode)
+  :custom
+  (org-superstar-remove-leading-stars t)
+  (org-superstar-headline-bullets-list '("☕" "☀" "☎" "☞" "☭" "☯" "☮")))
+
+  (dolist (face '((org-level-1 . 1.2)
+		  (org-level-2 . 1.1)
+		  (org-level-3 . 1.05)
+		  (org-level-4 . 1.0)
+		  (org-level-5 . 1.1)
+		  (org-level-6 . 1.1)
+		  (org-level-7 . 1.1)
+		  (org-level-8 . 1.1)))
+    (set-face-attribute (car face) nil :font "IBM Plex Sans" :weight 'regular  :height (cdr face))) 
+
+;;Setting other faces to be fixed-pitch so that it looks right
+
 ;; Making org-mode smarter
 (with-eval-after-load 'org
   (org-babel-do-load-languages
@@ -169,5 +209,6 @@
       '((emacs-lisp . t)
       (python . t)))
 
-  (push '("conf-unix" . conf-unix) org-src-lang-modes))
+  (push '("conf-unix" . conf-unix) org-src-lang-mode))
+
 

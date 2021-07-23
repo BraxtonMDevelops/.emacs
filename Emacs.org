@@ -1,10 +1,18 @@
 #+Title: Hand-Rolled Emacs Config
 #+Author: BraxtonMDevelops
 #+PROPERTY: header-args: emacs-lisp :tangle ./init-1.el
+
 * Quality of Life Changes:
   Making Emacs look modern
-  #+begin_src emacs-lisp
+  #+begin_src emacs-lisp :tangle ./init-1.el
     (menu-bar-mode -1)
     (scrollbar-mode -1)
-    
+    (tooltip-mode -1)
+    (set-fringe-mode 10)
+    (defconst custom-file "/dev/null")
   #+end_src
+
+
+* Yo this is Jeff from the Overwatch Team
+making balance changes like you wouldn't believe.
+ 
