@@ -175,13 +175,9 @@
   (auto-fill-mode 0)
   (visual-line-mode 1)
   (setq evil-auto-indent nil)
-  (org-indednt-mode))
+  (org-indent-mode))
   
-(use-package org
-  :hook (org-mode . mj/org-mode-setup)
-  :config
-  (setq org-ellipsis " ▾"))
-
+;; Setting up nonsense bullets
  
   (use-package org-superstar  
   :after org
@@ -190,17 +186,47 @@
   (org-superstar-remove-leading-stars t)
   (org-superstar-headline-bullets-list '("☕" "☀" "☎" "☞" "☭" "☯" "☮")))
 
+(defun mj/org-font-setup ()
+  ;; Replace list hyphen with dot
+
+  ;; Set faces for heading levels
   (dolist (face '((org-level-1 . 1.2)
-		  (org-level-2 . 1.1)
-		  (org-level-3 . 1.05)
-		  (org-level-4 . 1.0)
-		  (org-level-5 . 1.1)
-		  (org-level-6 . 1.1)
-		  (org-level-7 . 1.1)
-		  (org-level-8 . 1.1)))
-    (set-face-attribute (car face) nil :font "IBM Plex Sans" :weight 'regular  :height (cdr face))) 
+                  (org-level-2 . 1.1)
+                  (org-level-3 . 1.05)
+                  (org-level-4 . 1.0)
+                  (org-level-5 . 1.1)
+                  (org-level-6 . 1.1)
+                  (org-level-7 . 1.1)
+                  (org-level-8 . 1.1)))
+    (set-face-attribute (car face) nil :font "IBM Plex Sans" :weight 'regular :height (cdr face)))
+
+  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+  (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-table nil    :inherit 'fixed-pitch)
+  (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch)
+  (set-face-attribute 'line-number nil :inherit 'fixed-pitch)
+  (set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch))
+
 
 ;;Setting other faces to be fixed-pitch so that it looks right
+
+(use-package org
+  :hook (org-mode . mj/org-mode-setup)
+  :config
+  (setq org-ellipsis " ▾")
+  (mj/org-font-setup)
+  (setq org-agenda-start-with-log-mode t)
+  (setq org-log-done 'time)
+  (setq org-log-into-drawer t)
+  (setq org-agenda-files
+	'("~/Org/Tasks.org")))
+
 
 ;; Making org-mode smarter
 (with-eval-after-load 'org
@@ -209,6 +235,15 @@
       '((emacs-lisp . t)
       (python . t)))
 
-  (push '("conf-unix" . conf-unix) org-src-lang-mode))
+  (push '("conf-unix" . conf-unix) org-src-lang-modes))
 
-
+;; Setting up projectile
+(use-package projectile
+  :diminish projectile-mode
+  :config (projectile-mode)
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  :init
+  (when (file-directory-p "~/Development")
+    (setq projectile-project-search-path '("~/Development")))
+  (setq projectile-switch-project-action #'projectile-dired))
