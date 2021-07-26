@@ -1,6 +1,8 @@
 ;;Allows me to write this config literatlly
 ;;(org-babel-load-file (expand-file-name "config.org"  user-emacs-directory))
 
+;;Setting up emacs server
+;;(server-start)
 
 ;;Quality of Life Changes
 
@@ -16,12 +18,23 @@
 
 (setq visible-bell t)
 
-;;Set font
-(set-face-attribute 'default nil :font "VictorMono Nerd Font Mono" :height 240 :weight 'medium)
+(defun mj/set-font-faces()
+  (message "Loading fonts!")
+  (set-face-attribute 'default nil :font "VictorMono Nerd Font Mono" :height 240 :weight 'medium)
+  (set-face-attribute 'fixed-pitch nil :font "VictorMono Nerd Font Mono" :height 240 :weight 'medium)
+  (set-face-attribute 'variable-pitch nil :font "IBM Plex Sans" :height 250 ))
+;; Below are fonts i used to use
 ;;(set-face-attribute 'default nil :font "Monofur Nerd Font Mono" :height 240)
 ;; FantasqueSans Mono Nerd Font
-(set-face-attribute 'fixed-pitch nil :font "VictorMono Nerd Font Mono" :height 240 :weight 'medium)
-(set-face-attribute 'variable-pitch nil :font "IBM Plex Sans" :height 250)
+
+;;Sets up fonts in daemon mode
+(if (daemonp)
+    (add-hook 'server-after-make-frame-hook
+	      (lambda (frame)
+		(setq doom-modeline-icon t)
+		(with-selected-frame frame
+		  (mj/set-font-faces))))
+    (mj/set-font-faces))
 
 ;;Setting up package archives and stuff
 (require 'package)
@@ -89,7 +102,6 @@
 (setq display-line-numbers-type 'relative)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 (add-hook 'conf-mode-hook 'display-line-numbers-mode)
-
 	  
 (display-time-mode 1)
 
