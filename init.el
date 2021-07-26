@@ -162,8 +162,9 @@
 (use-package evil-collection
   :after evil
   :config
+  (setq evil-collection-mode-list
+        (remove 'lispy evil-collection-mode-list))
   (evil-collection-init))
-
 ;;Hydra Ezpz repetetive keybinds setup
 
 (use-package hydra)
