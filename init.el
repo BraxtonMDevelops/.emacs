@@ -247,3 +247,12 @@
   (when (file-directory-p "~/Development")
     (setq projectile-project-search-path '("~/Development")))
   (setq projectile-switch-project-action #'projectile-dired))
+
+;; Setting up basics of Magit
+
+(use-package magit
+  :commands (magit-status magit-get-current-branch)
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+
