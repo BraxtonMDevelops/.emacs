@@ -142,6 +142,10 @@
      :states '(normal motion)
      :keymaps 'override))
 
+;; Setting Up Flycheck a bit.
+(use-package flycheck
+  :init
+  (global-flycheck-mode t))
 
 ;;Doing Evil
 (use-package evil
