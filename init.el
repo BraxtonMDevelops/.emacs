@@ -4,6 +4,9 @@
 ;;Setting up emacs server
 ;;(server-start)
 
+;;Setup authorization stuffs
+(setq auth-sources '("~/.authinfo"))
+
 ;;Quality of Life Changes
 
 (menu-bar-mode -1)
@@ -279,4 +282,11 @@
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
+(use-package forge
+  :after magit)
 
+(require 'org-tempo)
+(setq-default truncate-lines t)
+(setq-default global-visual-line-mode 0)
+
+(use-package centaur-tabs)
