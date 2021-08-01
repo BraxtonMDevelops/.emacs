@@ -1,12 +1,14 @@
+(server-start)
 (require 'package)
 
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			 ("org" . "https://orgmode.org/elpa/")
-			 ("elpa" . "https://elpa.gnu.org/packages/")))
 
-(package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
+  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                           ("org" . "https://orgmode.org/elpa/")
+                           ("elpa" . "https://elpa.gnu.org/packages/")))
+
+  (package-initialize)
+  (unless package-archive-contents
+    (package-refresh-contents))
 
 (require 'use-package)
 (setq use-package-always-ensure t)
@@ -94,6 +96,8 @@
 (use-package smartparens)
 (smartparens-global-mode t)
 (show-paren-mode 1)
+
+
 
 (use-package evil
   :init
@@ -236,3 +240,20 @@
 
 (use-package forge
   :after magit)
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("a82ab9f1308b4e10684815b08c9cac6b07d5ccb12491f44a942d845b406b0296" "c5ded9320a346146bbc2ead692f0c63be512747963257f18cc8518c5254b7bf5" "da53441eb1a2a6c50217ee685a850c259e9974a8fa60e899d393040b4b8cc922" "333958c446e920f5c350c4b4016908c130c3b46d590af91e1e7e2a0611f1e8c5" "3d54650e34fa27561eb81fc3ceed504970cc553cfd37f46e8a80ec32254a3ec3" "246a9596178bb806c5f41e5b571546bb6e0f4bd41a9da0df5dfbca7ec6e2250c" "a7b20039f50e839626f8d6aa96df62afebb56a5bbd1192f557cb2efb5fcfb662" "7eea50883f10e5c6ad6f81e153c640b3a288cd8dc1d26e4696f7d40f754cc703" "5784d048e5a985627520beb8a101561b502a191b52fa401139f4dd20acb07607" "97db542a8a1731ef44b60bc97406c1eb7ed4528b0d7296997cbb53969df852d6" "f91395598d4cb3e2ae6a2db8527ceb83fed79dbaf007f435de3e91e5bda485fb" "4f1d2476c290eaa5d9ab9d13b60f2c0f1c8fa7703596fa91b235db7f99a9441b" "0b3aee906629ac7c3bd994914bf252cf92f7a8b0baa6d94cb4dfacbd4068391d" "d268b67e0935b9ebc427cad88ded41e875abfcc27abd409726a92e55459e0d01" "d47f868fd34613bd1fc11721fe055f26fd163426a299d45ce69bef1f109e1e71" default))
+ '(package-selected-packages
+   '(typescript-mode company lsp-mode which-key vterm use-package smartparens rainbow-delimiters projectile org-superstar ivy-rich hydra helpful general forge flycheck evil-collection doom-themes doom-modeline counsel command-log-mode centaur-tabs)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
