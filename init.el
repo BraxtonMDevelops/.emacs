@@ -112,6 +112,19 @@
   :init
   (global-flycheck-mode t))
 
+(use-package company
+  :bind (:map comapny-active-map
+         ("<tab>" . company-complete-selection))
+        (:map lsp-mode-map
+         ("<tab>" . comapny-indent-or-complete-common))
+  :config
+  (add-hook 'after-init-hook 'global-company-mode)
+  (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 3))
+
+(use-package company-box
+  :hook (company-mode . company-box-mode))
+
 (use-package vterm)
 
 (use-package rainbow-delimiters
@@ -159,13 +172,10 @@
   :config
   (lsp-enable-which-key-integration t))
 
-(use-package lsp-ui)
-
-(use-package company
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
   :config
-  (add-hook 'after-init-hook 'global-company-mode)
-  (setq company-idle-delay 0)
-  (setq company-minimum-prefix-length 3))
+  (setq lsp-ui-doc-position 'bottom))
 
 (setq gc-cons-threshold 100000000)
 

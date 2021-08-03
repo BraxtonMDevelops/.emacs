@@ -53,6 +53,7 @@ Configuring Modeline
 
       (display-time-mode 1)
 #+end_src
+** 
 ** Font configuration Setting up fonts to work with Demon.
 #+begin_src emacs-lisp
 (defun mj/set-font-faces()
@@ -170,6 +171,23 @@ Setting up the basics of flycheck
       (global-flycheck-mode t))
 #+end_src
 ** Comapny Mode:
+Install Company
+#+begin_src emacs-lisp
+    (use-package company
+      :bind (:map comapny-active-map
+             ("<tab>" . company-complete-selection))
+            (:map lsp-mode-map
+             ("<tab>" . comapny-indent-or-complete-common))
+      :config
+      (add-hook 'after-init-hook 'global-company-mode)
+      (setq company-idle-delay 0)
+      (setq company-minimum-prefix-length 3))
+#+end_src
+Make pretty icons
+#+begin_src emacs-lisp
+   (use-package company-box
+     :hook (company-mode . company-box-mode))
+#+end_src
 * Terminals/Shells: 
 Install Vterm 
 #+begin_src emacs-lisp
@@ -235,7 +253,7 @@ Using General
 * Yo this is Jeff from the Overwatch Team
 making balance changes like you wouldn't believe.
 * Languages for Coding:
-** Language Server Setup
+** Language Server Setup:
 Install LSP package
 #+begin_src emacs-lisp
   (use-package lsp-mode
@@ -247,21 +265,16 @@ Install LSP package
 #+end_src
 Also be using LSP UI
 #+begin_src emacs-lisp
-(use-package lsp-ui)
-#+end_src
-Install Company
-#+begin_src emacs-lisp
-  (use-package company
+  (use-package lsp-ui
+    :hook (lsp-mode . lsp-ui-mode)
     :config
-    (add-hook 'after-init-hook 'global-company-mode)
-    (setq company-idle-delay 0)
-    (setq company-minimum-prefix-length 3))
+    (setq lsp-ui-doc-position 'bottom))
 #+end_src
 Performance Setup
 #+begin_src emacs-lisp
-(setq gc-cons-threshold 100000000)
-#+end_src
-** TypeScript
+  (setq gc-cons-threshold 100000000)
+#+end_src 
+** TypeScript:
 #+begin_src emacs-lisp
   (use-package typescript-mode
     :mode "\\.ts\\'"
@@ -269,6 +282,7 @@ Performance Setup
     :config
     (setq typescript-indent-level 2))
 #+end_src
+** Python: 
 
 * Org:
 ** Org Fonts: 
