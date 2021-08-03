@@ -77,43 +77,78 @@ Actually insuring these get called when the demon comes around
 #+end_src
 
 * General Completion/Help:
+** Vertico:
+#+begin_src emacs-lisp
+  (use-package vertico
+    :bind (:map vertico-map
+                ("C-j" . vertico-next)
+                ("C-k" . vertico-previous)
+                :map minibuffer-local-map
+                ("M-h" . backward-kill-word))
+    :custom
+    (vertico-cycle t)
+    :init
+    (vertico-mode))
+#+end_src
+** Savehist:
+Install and initialize savehist
+#+begin_src emacs-lisp
+  (use-package savehist
+     :init
+     (savehist-mode))
+#+end_src
+** Consult:
+Install Consult 
+#+begin_src emacs-lisp
+  (use-package consult
+    :bind (("C-s" . consult-line)))
+#+end_src
+** Orderless:
+Install Orderless
+#+begin_src emacs-lisp
+  (use-package orderless
+     :init
+     (setq completion-styles '(orderless)
+           completion-category-defaults nil
+           completion-category-overrides '((file (styles partial-completion)))))
+#+end_src
 ** Ivy:
 Installing Ivy and setting up binds
 #+begin_src emacs-lisp
-(use-package swiper)
-     (use-package ivy
-        :diminish
-        :bind (("C-s" . swiper)
-               :map ivy-minibuffer-map
-               ("TAB" . ivy-alt-done)
-               ("C-l" . ivy-alt-done)
-               ("C-k" . ivy-next-line)
-               ("C-j" . ivy-previous-line)
-               :map ivy-switch-buffer-map
-               ("C-k" . ivy-previous-line)
-               ("C-l" . ivy-done)
-               ("C-d" . ivy-switch-buffer-kill)
-               :map ivy-reverse-i-search-map
-               ("C-k" . ivy-previous-line)
-               ("C-d" . ivy-previous-i-search-kill))
-      :config
-      (ivy-mode 1))
+;;(use-package swiper)
+;;     (use-package ivy
+;;        :diminish
+  ;      :bind (("C-s" . swiper)
+  ;             :map ivy-minibuffer-map
+  ;             ("TAB" . ivy-alt-done)
+  ;             ("C-l" . ivy-alt-done)
+  ;             ("C-k" . ivy-next-line)
+  ;           ("C-j" . ivy-previous-line)
+  ;            :map ivy-switch-buffer-map
+  ;             ("C-k" . ivy-previous-line)
+ ;              ("C-l" . ivy-done)
+;;               ("C-d" . ivy-switch-buffer-kill)
+;;               :map ivy-reverse-i-search-map
+;;               ("C-k" . ivy-previous-line)
+;;               ("C-d" . ivy-previous-i-search-kill))
+;;      :config
+;;     (ivy-mode 1))
 #+end_src
 Setting up ivy-rich
 #+begin_src emacs-lisp
-    (use-package ivy-rich
-      :init
-      (ivy-rich-mode 1))
+;;    (use-package ivy-rich
+;      :init
+;    (ivy-rich-mode 1))
 #+end_src
 ** Counsel:
 Setting up counsel and rebinding keys
 #+begin_src emacs-lisp
-          (use-package counsel
-            :bind (("M-x" . counsel-M-x)
-                   ("C-x b" . counsel-ibuffer)
-                   ("C-x C-f" . counsel-find-file)
-                   :map minibuffer-local-map
-                   ("C-r" . counsel-minibuffer-history))) 
+  ;;         (use-package counsel
+  ;;         :bind (("M-x" . counsel-M-x)
+  ;;              ("C-x b" . counsel-ibuffer)
+  ;;            ("C-x C-f" . counsel-find-file)
+  ;;          :map minibuffer-local-map
+  ;;        ("C-r" . counsel-minibuffer-history))) 
 #+end_src
 *** Helpful:
 Making default help better 
@@ -128,7 +163,6 @@ Making default help better
                   ([remap-describe-variable] . counsel-describe-variable)
                   ([remap-describe-key] . helpful-key))
 #+end_src
-** Flycheck:
 Setting up the basics of flycheck
 #+begin_src emacs-lisp
     (use-package flycheck
@@ -137,7 +171,7 @@ Setting up the basics of flycheck
 #+end_src
 ** Comapny Mode:
 * Terminals/Shells: 
-Install Vterm
+Install Vterm 
 #+begin_src emacs-lisp
 (use-package vterm)
 #+end_src
@@ -211,18 +245,26 @@ Install LSP package
     :config
     (lsp-enable-which-key-integration t))
 #+end_src
+Also be using LSP UI
+#+begin_src emacs-lisp
+(use-package lsp-ui)
+#+end_src
 Install Company
 #+begin_src emacs-lisp
   (use-package company
     :config
     (add-hook 'after-init-hook 'global-company-mode)
-    (setq company-idle-delay 0.1)
-    (setq company-minimum-prefix-length 1))
+    (setq company-idle-delay 0)
+    (setq company-minimum-prefix-length 3))
+#+end_src
+Performance Setup
+#+begin_src emacs-lisp
+(setq gc-cons-threshold 100000000)
 #+end_src
 ** TypeScript
 #+begin_src emacs-lisp
   (use-package typescript-mode
-    :mode "\\.ts\'"
+    :mode "\\.ts\\'"
     :hook (typescript-mode . lsp-deferred)
     :config
     (setq typescript-indent-level 2))
