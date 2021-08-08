@@ -20,7 +20,30 @@
 (set-fringe-mode 10)
 (use-package all-the-icons)
 
-(use-package doom-themes)
+(use-package treemacs-all-the-icons
+  :after treemacs)
+(use-package treemacs
+ :defer t
+ :init
+ (setq treemacs-follow-after-init t
+       treemacs-is-never-other-window t)
+ :config
+ (treemacs-follow-mode -1)
+ (require 'treemacs-all-the-icons)
+ (treemacs-load-theme "all-the-icons"))
+(use-package treemacs-evil
+  :defer t
+  :init
+  :after treemacs (require 'treemacs-evil))
+(use-package treemacs-projectile
+  :after treemacs)
+(use-package treemacs-magit
+  :after treemacs magit)
+(use-package lsp-treemacs
+  :after(treemacs lsp))
+
+(use-package doom-themes
+  :demand t)
 (setq doom-themes-enable-bold t
       doom-themes-enable-italics t)
 (load-theme 'doom-outrun-electric t)
@@ -34,6 +57,9 @@
 
     (display-time-mode 1)
 
+(set-face-attribute 'default nil :font "VictorMono Nerd Font Mono" :height 240 :weight 'medium)
+(set-face-attribute 'fixed-pitch nil :font "VictorMono Nerd Font Mono" :height 240 :weight 'medium)
+(set-face-attribute 'variable-pitch nil :font "IBM Plex Sans" :height 250 )
 (defun mj/set-font-faces()
 (message "Loading fonts!")
 (set-face-attribute 'default nil :font "VictorMono Nerd Font Mono" :height 240 :weight 'medium)
@@ -43,6 +69,15 @@
 (if (daemonp) (add-hook 'server-after-make-frame-hook (lambda (frame) (setq doom-modeline-icon t) (with-selected-frame frame (mj/setfont-faces)))) (mj/set-font-faces))
 
 (use-package centaur-tabs)
+
+(use-package dired
+  :ensure nil
+  :commands (dired dired-jump)
+  :bind (("C-x C-j" . dired-jump))
+  :config
+  (evil-collection-define-key 'normal 'dired-mode-map
+    "h" dired-up-directory
+    "l" dired-find-file))
 
 (use-package vertico
   :bind (:map vertico-map
@@ -113,10 +148,6 @@
   (global-flycheck-mode t))
 
 (use-package company
-  :bind (:map comapny-active-map
-         ("<tab>" . company-complete-selection))
-        (:map lsp-mode-map
-         ("<tab>" . comapny-indent-or-complete-common))
   :config
   (add-hook 'after-init-hook 'global-company-mode)
   (setq company-idle-delay 0)

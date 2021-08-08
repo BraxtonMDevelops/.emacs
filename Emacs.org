@@ -23,7 +23,7 @@ Making Emacs be use use-package and making use-package smort
   (require 'use-package)
   (setq use-package-always-ensure t)
 #+end_src
-* UI Setup:
+* UI Setup: 
 Making Emacs look modern
 #+begin_src emacs-lisp
   (tool-bar-mode -1)
@@ -33,12 +33,38 @@ Making Emacs look modern
   (set-fringe-mode 10)
   (use-package all-the-icons)
 #+end_src
-** Theming & Modeline Setting up doom theme
+** Treemacs: 
+Install Treemacs
 #+begin_src emacs-lisp
-  (use-package doom-themes)
-(setq doom-themes-enable-bold t
-      doom-themes-enable-italics t)
-(load-theme 'doom-outrun-electric t)
+    (use-package treemacs-all-the-icons
+      :after treemacs)
+    (use-package treemacs
+     :defer t
+     :init
+     (setq treemacs-follow-after-init t
+           treemacs-is-never-other-window t)
+     :config
+     (treemacs-follow-mode -1)
+     (require 'treemacs-all-the-icons)
+     (treemacs-load-theme "all-the-icons"))
+    (use-package treemacs-evil
+      :defer t
+      :init
+      :after treemacs (require 'treemacs-evil))
+    (use-package treemacs-projectile
+      :after treemacs)
+    (use-package treemacs-magit
+      :after treemacs magit)
+    (use-package lsp-treemacs
+      :after(treemacs lsp))
+#+end_src
+** Theming & Modeline Setting up doom theme:
+#+begin_src emacs-lisp
+    (use-package doom-themes
+      :demand t)
+    (setq doom-themes-enable-bold t
+          doom-themes-enable-italics t)
+    (load-theme 'doom-outrun-electric t)
 #+end_src
 Enabilng doom modeline
 #+begin_src emacs-lisp
@@ -53,9 +79,11 @@ Configuring Modeline
 
       (display-time-mode 1)
 #+end_src
-** 
 ** Font configuration Setting up fonts to work with Demon.
 #+begin_src emacs-lisp
+(set-face-attribute 'default nil :font "VictorMono Nerd Font Mono" :height 240 :weight 'medium)
+(set-face-attribute 'fixed-pitch nil :font "VictorMono Nerd Font Mono" :height 240 :weight 'medium)
+(set-face-attribute 'variable-pitch nil :font "IBM Plex Sans" :height 250 )
 (defun mj/set-font-faces()
 (message "Loading fonts!")
 (set-face-attribute 'default nil :font "VictorMono Nerd Font Mono" :height 240 :weight 'medium)
@@ -75,6 +103,18 @@ Actually insuring these get called when the demon comes around
     Installing Centaur tabs Package
  #+begin_src emacs-lisp
    (use-package centaur-tabs)
+#+end_src
+* Customizing Dire d 
+Basic Config
+#+begin_src emacs-lisp
+  (use-package dired
+    :ensure nil
+    :commands (dired dired-jump)
+    :bind (("C-x C-j" . dired-jump))
+    :config
+    (evil-collection-define-key 'normal 'dired-mode-map
+      "h" dired-up-directory
+      "l" dired-find-file))
 #+end_src
 
 * General Completion/Help:
@@ -173,18 +213,14 @@ Setting up the basics of flycheck
 ** Comapny Mode:
 Install Company
 #+begin_src emacs-lisp
-    (use-package company
-      :bind (:map comapny-active-map
-             ("<tab>" . company-complete-selection))
-            (:map lsp-mode-map
-             ("<tab>" . comapny-indent-or-complete-common))
-      :config
-      (add-hook 'after-init-hook 'global-company-mode)
-      (setq company-idle-delay 0)
-      (setq company-minimum-prefix-length 3))
-#+end_src
+  (use-package company
+    :config
+    (add-hook 'after-init-hook 'global-company-mode)
+    (setq company-idle-delay 0)
+    (setq company-minimum-prefix-length 3))
+#+END_src
 Make pretty icons
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp 
    (use-package company-box
      :hook (company-mode . company-box-mode))
 #+end_src
