@@ -70,14 +70,40 @@
 
 (use-package centaur-tabs)
 
+(use-package ligature
+  :load-path "/home/mjolnir/.emacs/ligature.el"
+  :config 
+  ;; Enable the "www" ligature in every possible major mode
+  (ligature-set-ligatures 't '("www"))
+  ;; Enable traditional ligature support in eww-mode, if the
+  ;; `variable-pitch' face supports it
+  (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
+  ;; Enable all Cascadia Code ligatures in programming modes
+  (ligature-set-ligatures 'prog-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
+                                       ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
+                                       "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
+                                       "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
+                                       "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
+                                       "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
+                                       "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
+                                       "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
+                                       ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
+                                       "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
+                                       "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
+                                       "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
+                                       )) 
+  ;; Enables ligature checks globally in all buffers. You can also do it
+  ;; per mode with `ligature-mode'.
+  (global-ligature-mode t))
+
 (use-package dired
   :ensure nil
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump))
   :config
   (evil-collection-define-key 'normal 'dired-mode-map
-    "h" dired-up-directory
-    "l" dired-find-file))
+    "h" 'dired-up-directory
+    "l" 'dired-find-file))
 
 (use-package vertico
   :bind (:map vertico-map
@@ -89,6 +115,16 @@
   (vertico-cycle t)
   :init
   (vertico-mode))
+
+(use-package marginalia
+  :bind (("M-A" . marginalia-cycle)
+        :map minibuffer-local-map
+        ("M-A" . marginalia-cycle))
+  :init
+  (marginalia-mode))
+
+(use-package all-the-icons-completion
+  :hook ('marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
 
 (use-package savehist
    :init
@@ -196,8 +232,12 @@
 
 (use-package general)
 
+(defun mj/lsp-mode-setup ()
+    (setq company-minimum-prefix-length 1))
+
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
+  :hook (lsp-mode . mj/lsp-mode-setup)
   :init
   (setq lsp-keymap-prefix "C-c l")
   :config
@@ -215,6 +255,16 @@
   :hook (typescript-mode . lsp-deferred)
   :config
   (setq typescript-indent-level 2))
+
+(use-package lsp-julia
+  :after lsp-mode)
+
+(use-package julia-mode
+    :hook (julia-mode . lsp-deferred)
+    :interpreter "julia")
+
+(use-package julia-repl
+  :hook (julia-mode . julia-repl-mode))
 
 (defun mj/org-font-setup ()
 
@@ -243,6 +293,7 @@
   (set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch))
 
 (defun mj/org-mode-setup()
+  (mj/org-font-setup)
   (variable-pitch-mode 1)
   (auto-fill-mode 0)
   (visual-line-mode 1)
@@ -260,8 +311,8 @@
 (use-package org
   :hook (org-mode . mj/org-mode-setup)
   :config
+  (setq org-src-fontify-natively t)
   (setq org-ellipsis " ▾")
-  (mj/org-font-setup)
   (setq org-agenda-start-with-time-log-mode t)
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
@@ -309,5 +360,3 @@
 
 (use-package forge
   :after magit)
-
-

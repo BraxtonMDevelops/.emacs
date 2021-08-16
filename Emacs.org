@@ -60,11 +60,11 @@ Install Treemacs
 #+end_src
 ** Theming & Modeline Setting up doom theme:
 #+begin_src emacs-lisp
-    (use-package doom-themes
-      :demand t)
-    (setq doom-themes-enable-bold t
-          doom-themes-enable-italics t)
-    (load-theme 'doom-outrun-electric t)
+  (use-package doom-themes
+    :demand t)
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italics t)
+  (load-theme 'doom-outrun-electric t)
 #+end_src
 Enabilng doom modeline
 #+begin_src emacs-lisp
@@ -104,6 +104,35 @@ Actually insuring these get called when the demon comes around
  #+begin_src emacs-lisp
    (use-package centaur-tabs)
 #+end_src
+** Ligatures in Emacs
+ye
+#+begin_src emacs-lisp
+(use-package ligature
+  :load-path "/home/mjolnir/.emacs/ligature.el"
+  :config 
+  ;; Enable the "www" ligature in every possible major mode
+  (ligature-set-ligatures 't '("www"))
+  ;; Enable traditional ligature support in eww-mode, if the
+  ;; `variable-pitch' face supports it
+  (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
+  ;; Enable all Cascadia Code ligatures in programming modes
+  (ligature-set-ligatures 'prog-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
+                                       ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
+                                       "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
+                                       "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
+                                       "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
+                                       "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
+                                       "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
+                                       "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
+                                       ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
+                                       "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
+                                       "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
+                                       "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
+                                       )) 
+  ;; Enables ligature checks globally in all buffers. You can also do it
+  ;; per mode with `ligature-mode'.
+  (global-ligature-mode t))
+#+end_src
 * Customizing Dire d 
 Basic Config
 #+begin_src emacs-lisp
@@ -113,8 +142,8 @@ Basic Config
     :bind (("C-x C-j" . dired-jump))
     :config
     (evil-collection-define-key 'normal 'dired-mode-map
-      "h" dired-up-directory
-      "l" dired-find-file))
+      "h" 'dired-up-directory
+      "l" 'dired-find-file))
 #+end_src
 
 * General Completion/Help:
@@ -130,6 +159,21 @@ Basic Config
     (vertico-cycle t)
     :init
     (vertico-mode))
+#+end_src
+** Marginalia:
+Installing and basic setup for marginalia
+#+begin_src emacs-lisp
+  (use-package marginalia
+    :bind (("M-A" . marginalia-cycle)
+          :map minibuffer-local-map
+          ("M-A" . marginalia-cycle))
+    :init
+    (marginalia-mode))
+#+end_src
+Allowing use of icons when completing
+#+begin_src emacs-lisp
+  (use-package all-the-icons-completion
+    :hook ('marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
 #+end_src
 ** Savehist:
 Install and initialize savehist
@@ -290,10 +334,16 @@ Using General
 making balance changes like you wouldn't believe.
 * Languages for Coding:
 ** Language Server Setup:
+Setting A Basic Function to Change Some Things When LSP Mode "Hits"
+#+begin_src emacs-lisp
+  (defun mj/lsp-mode-setup ()
+      (setq company-minimum-prefix-length 1))
+#+end_src
 Install LSP package
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :commands (lsp lsp-deferred)
+    :hook (lsp-mode . mj/lsp-mode-setup)
     :init
     (setq lsp-keymap-prefix "C-c l")
     :config
@@ -317,6 +367,23 @@ Performance Setup
     :hook (typescript-mode . lsp-deferred)
     :config
     (setq typescript-indent-level 2))
+#+end_src
+** Julia: 
+LSP For Julia
+#+begin_src emacs-lisp
+  (use-package lsp-julia
+    :after lsp-mode)
+#+end_src
+Setting up the basics of Julia
+#+begin_src emacs-lisp
+  (use-package julia-mode
+      :hook (julia-mode . lsp-deferred)
+      :interpreter "julia")
+#+end_src
+Using Julia-repl
+#+begin_src emacs-lisp
+  (use-package julia-repl
+    :hook (julia-mode . julia-repl-mode))
 #+end_src
 ** Python: 
 
@@ -354,6 +421,7 @@ Setting up fonts for org-mode
 making org-mode-setup function
 #+begin_src emacs-lisp
   (defun mj/org-mode-setup()
+    (mj/org-font-setup)
     (variable-pitch-mode 1)
     (auto-fill-mode 0)
     (visual-line-mode 1)
@@ -372,16 +440,16 @@ Setting up fun org mode bullets
 #+end_src
 Running previously setup org hooks and all
 #+begin_src emacs-lisp
-  (use-package org
-    :hook (org-mode . mj/org-mode-setup)
-    :config
-    (setq org-ellipsis " ▾")
-    (mj/org-font-setup)
-    (setq org-agenda-start-with-time-log-mode t)
-    (setq org-log-done 'time)
-    (setq org-log-into-drawer t)
-    (setq org-agenda-files
-          '("~/Org/Tasks.org")))
+    (use-package org
+      :hook (org-mode . mj/org-mode-setup)
+      :config
+      (setq org-src-fontify-natively t)
+      (setq org-ellipsis " ▾")
+      (setq org-agenda-start-with-time-log-mode t)
+      (setq org-log-done 'time)
+      (setq org-log-into-drawer t)
+      (setq org-agenda-files
+            '("~/Org/Tasks.org")))
 #+end_src
 ** Enabling org-tempo:
 Unleashing Tempo and Improving it
@@ -453,4 +521,4 @@ Start by telling emacs where authinfo is located
 Installing elfeed
 #+begin_src emacs-lisp
 
-#+end_src
+#+end_
