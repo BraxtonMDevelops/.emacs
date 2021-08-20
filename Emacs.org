@@ -386,6 +386,13 @@ Using Julia-repl
     :hook (julia-mode . julia-repl-mode))
 #+end_src
 ** Python: 
+Setting up python mode and some lsp for it.
+#+begin_src emacs-lisp
+        (use-package python-mode
+          :hook (python-mode . lsp-deferred)
+          :custom
+          (python-shell-interpreter "python3"))
+#+end_src
 
 * Org:
 ** Org Fonts: 

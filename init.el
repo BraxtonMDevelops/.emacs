@@ -266,6 +266,11 @@
 (use-package julia-repl
   :hook (julia-mode . julia-repl-mode))
 
+(use-package python-mode
+  :hook (python-mode . lsp-deferred)
+  :custom
+  (python-shell-interpreter "python3"))
+
 (defun mj/org-font-setup ()
 
   ;; Set faces for heading levels
