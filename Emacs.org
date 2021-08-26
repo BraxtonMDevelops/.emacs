@@ -172,8 +172,9 @@ Installing and basic setup for marginalia
 #+end_src
 Allowing use of icons when completing
 #+begin_src emacs-lisp
-  (use-package all-the-icons-completion
+  (use-package all-the-icons-completion 
     :hook ('marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
+  (all-the-icons-completion-mode)
 #+end_src
 ** Savehist:
 Install and initialize savehist
@@ -392,6 +393,11 @@ Setting up python mode and some lsp for it.
           :hook (python-mode . lsp-deferred)
           :custom
           (python-shell-interpreter "python3"))
+#+end_src
+** Haskell:
+Install haskell language mode
+#+begin_src emacs-lisp
+(use-package haskell-mode)
 #+end_src
 
 * Org:

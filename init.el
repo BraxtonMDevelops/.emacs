@@ -123,8 +123,9 @@
   :init
   (marginalia-mode))
 
-(use-package all-the-icons-completion
+(use-package all-the-icons-completion 
   :hook ('marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
+(all-the-icons-completion-mode)
 
 (use-package savehist
    :init
@@ -270,6 +271,8 @@
   :hook (python-mode . lsp-deferred)
   :custom
   (python-shell-interpreter "python3"))
+
+(use-package haskell-mode)
 
 (defun mj/org-font-setup ()
 
