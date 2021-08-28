@@ -399,6 +399,18 @@ Install haskell language mode
 #+begin_src emacs-lisp
 (use-package haskell-mode)
 #+end_src
+** Rust:
+Setting up a mode for Rust.
+#+begin_src emacs-lisp
+  (use-package rustic
+    :mode ("\\.rs$" . rustic-mode)
+    :hook (rustic-mode . lsp-deferred)
+    :init
+    (add-to-list 'org-src-lang-modes ("rust" . rustic))
+    :config
+    (setq rustic-indent-method-chian t)
+    (setq rustic-lsp-client 'rust-analyzer)
+#+end_src
 
 * Org:
 ** Org Fonts: 

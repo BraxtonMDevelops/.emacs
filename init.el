@@ -274,6 +274,15 @@
 
 (use-package haskell-mode)
 
+(use-package rustic
+  :mode ("\\.rs$" . rustic-mode)
+  :hook (rustic-mode . lsp-deferred)
+  :init
+  (add-to-list 'org-src-lang-modes ("rust" . rustic))
+  :config
+  (setq rustic-indent-method-chian t)
+  (setq rustic-lsp-client 'rust-analyzer)
+
 (defun mj/org-font-setup ()
 
   ;; Set faces for heading levels
